@@ -9,7 +9,7 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer, CartSerializer, CartItemSerializer,\
-    AddCartItemSerializer
+    AddCartItemSerializer, UpdateCartItemSerializer
 from .models import Collection, Product, OrderItem, Review, Cart, CartItem
 from .pagination import DefaultPagination
 from .filters import ProductFilter
@@ -65,10 +65,13 @@ class CartViewSet(CreateModelMixin,
 
 
 class CartItemViewSet(ModelViewSet):
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AddCartItemSerializer
+        if self.request.method == 'PATCH':
+            return UpdateCartItemSerializer
         return CartItemSerializer
 
     def get_serializer_context(self):
