@@ -11,8 +11,8 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer
-from .models import Collection, Product, OrderItem, Review, Cart, CartItem, Customer
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer
+from .models import Collection, Product, Order, OrderItem, Review, Cart, CartItem, Customer
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
 from .filters import ProductFilter
@@ -109,3 +109,8 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
