@@ -11,8 +11,8 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer, CartSerializer, \
-    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer,\
-    CreateOrderSerializer
+    CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, \
+    CreateOrderSerializer, UpdateOrderSerializer
 from .models import Collection, Product, Order, OrderItem, Review, Cart, CartItem, Customer
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
@@ -94,6 +94,7 @@ class CustomerViewSet(ModelViewSet):
     """
         Override get_permission method for applying Http method specific Authorizations
     """
+
     # def get_permissions(self):
     #     if self.request.method == 'GET':
     #         return [AllowAny()]
@@ -138,9 +139,9 @@ class OrderViewSet(ModelViewSet):
         (customer_id, created) = Customer.objects.only('id').get_or_create(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
 
-
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
         return OrderSerializer
-
