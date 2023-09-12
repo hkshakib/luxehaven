@@ -12,8 +12,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer, CartSerializer, \
     CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer, OrderSerializer, \
-    CreateOrderSerializer, UpdateOrderSerializer
-from .models import Collection, Product, Order, OrderItem, Review, Cart, CartItem, Customer
+    CreateOrderSerializer, UpdateOrderSerializer, ProductImageSerializer
+from .models import Collection, Product, Order, OrderItem, Review, Cart, CartItem, Customer, ProductImage
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
 from .filters import ProductFilter
@@ -145,3 +145,13 @@ class OrderViewSet(ModelViewSet):
         elif self.request.method == 'PATCH':
             return UpdateOrderSerializer
         return OrderSerializer
+
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs['product_pk']}
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
